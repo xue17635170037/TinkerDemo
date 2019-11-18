@@ -1,0 +1,79 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "25.0.2"
+
+
+    //recommend
+    dexOptions {
+        jumboMode = true
+    }
+
+    defaultConfig {
+        applicationId "com.larissa.tinkerdemo"
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+    }
+    signingConfigs{
+        release {
+            keyAlias 'delelongkey'
+            keyPassword 'yu543212'
+            storeFile file('E:/Progict/TinkerDemo/app/keystore/key.keystore')
+            storePassword 'yu543212'
+        }
+        debug {
+            keyAlias 'delelongkey'
+            keyPassword 'yu543212'
+            storeFile file('E:/Progict/TinkerDemo/app/keystore/key.keystore')
+            storePassword 'yu543212'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+    packagingOptions {
+        exclude "/META-INF/**"
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.zhouyou:rxeasyhttp:2.1.5'
+    compile 'com.android.support:appcompat-v7:25.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:multidex:1.0.1'
+
+//    compile("com.tinkerpatch.sdk:tinkerpatch-android-sdk:1.9.2")
+
+    annotationProcessor("com.tinkerpatch.tinker:tinker-android-anno:${TINKER_VERSION}") {
+        changing = true
+    }
+    compile("com.tinkerpatch.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+    compile("com.tinkerpatch.sdk:tinkerpatch-android-sdk:${TINKERPATCH_VERSION}") {
+        changing = true
+    }
+}
+apply from: 'tinkerpatch.gradle'
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
